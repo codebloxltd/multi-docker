@@ -3,18 +3,18 @@ language: generic
 services:
     - docker
 before_install:
-    - docker build -t codebloxltd/react-test ./client/Dockerfile.dev ./client
+    - docker build -t codeblox/react-test ./client/Dockerfile.dev ./client
 script:
-    - docker run -e CI=true codebloxltd/react-test npm test -- --coverage
+    - docker run -e CI=true codeblox/react-test npm test -- --coverage
 after_success:
-    - docker build -t codebloxltd/multi-client ./client
-    - docker build -t codebloxltd/multi-nginx ./nginx
-    - docker build -t codebloxltd/multi-server ./server
-    - docker build -t codebloxltd/multi-worker ./worker
+    - docker build -t codeblox/multi-client ./client
+    - docker build -t codeblox/multi-nginx ./nginx
+    - docker build -t codeblox/multi-server ./server
+    - docker build -t codeblox/multi-worker ./worker
     # Log into docker CLI
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Push to Docker Hub
-    - docker push codebloxltd/multi-client
-    - docker push codebloxltd/multi-nginx
-    - docker push codebloxltd/multi-server
-    - docker push codebloxltd/multi-worker
+    - docker push codeblox/multi-client
+    - docker push codeblox/multi-nginx
+    - docker push codeblox/multi-server
+    - docker push codeblox/multi-worker
