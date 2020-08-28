@@ -5,7 +5,7 @@ services:
 before_install:
     - docker build -t codebloxltd/react-test -f ./client/Dockerfile.dev ./client
 script:
-    - docker run -e CI=true codebloxltd/react-test npm test -- --coverage
+    - docker run -e CI=true codebloxltd/react-test npm test
 after_success:
     - docker build -t codebloxltd/multi-client ./client
     - docker build -t codebloxltd/multi-nginx ./nginx
