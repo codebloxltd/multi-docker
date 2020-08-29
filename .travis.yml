@@ -1,36 +1,32 @@
 sudo: required
 language: generic
-
 services:
-  - docker
-
+    - docker
 before_install:
-  - docker build -t stephengrider/react-test -f ./client/Dockerfile.dev ./client
-
+    - docker build -t codebloxltd/react-test -f ./client/Dockerfile.dev ./client
 script:
-  - docker run stephengrider/react-test npm test -- --coverage
-
+    - docker run -e CI=true codebloxltd/react-test npm test
 after_success:
-  - docker build -t stephengrider/multi-client ./client
-  - docker build -t stephengrider/multi-nginx ./nginx
-  - docker build -t stephengrider/multi-server ./server
-  - docker build -t stephengrider/multi-worker ./worker
-  # Log in to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Take those images and push them to docker hub
-  - docker push stephengrider/multi-client
-  - docker push stephengrider/multi-nginx
-  - docker push stephengrider/multi-server
-  - docker push stephengrider/multi-worker
-
+    - docker build -t codebloxltd/multi-client ./client
+    - docker build -t codebloxltd/multi-nginx ./nginx
+    - docker build -t codebloxltd/multi-server ./server
+    - docker build -t codebloxltd/multi-worker ./worker
+    # Log into docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push to Docker Hub
+    - docker push codebloxltd/multi-client
+    - docker push codebloxltd/multi-nginx
+    - docker push codebloxltd/multi-server
+    - docker push codebloxltd/multi-worker
 deploy:
-  provider: elasticbeanstalk
-  region: us-west-1
-  app: multi-docker
-  env: MultiDocker-env
-  bucket_name: elasticbeanstalk-us-west-1-306476627547
-  bucket_path: docker-multi
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+    edge: true
+    provider: elasticbeanstalk
+    region: us-east-2
+    app: multi-docker
+    env: MultiDocker-env
+    bucket_name: elasticbeanstalk-us-east-2-217310886502
+    bucket_path: docker-multi
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
